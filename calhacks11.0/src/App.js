@@ -1,12 +1,7 @@
-
-import Button from "@mui/material/Button";
 import { IMaskInput } from "react-imask";
 import PropTypes from "prop-types";
-import FormControl from "@mui/material/FormControl";
-import Input from "@mui/material/Input";
-import InputLabel from "@mui/material/InputLabel";
-import React, { useState } from "react";
 import PhoneInput from "./Components/PhoneInput";
+import React, { useState } from "react";
 import { makeOutboundCall } from "./Components/outboundcalls";
 
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
@@ -40,50 +35,30 @@ function App() {
     // testing, please remove
   };
 
-  const handleSubmit2 = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     console.log(
       values.textmask.replace("-", "").replace(/\s+/g, "").replace(/[()]/g, "")
     );
+    makeOutboundCall(
+      values.textmask.replace("-", "").replace(/\s+/g, "").replace(/[()]/g, "")
+    );
   };
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    makeOutboundCall(phoneNumber);
-  };
-
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
-      <h1 className="text-3xl text-center text-purple-600 font-bold pb-10">
-        Treelungo
+      <h1 className="text-3xl text-center text-purple-600 font-bold">
+        Make a call
       </h1>
-      <div className="w-max">
-        <FormControl variant="standard" onSubmit={handleChange}>
-          <InputLabel htmlFor="formatted-text-mask-input">
-            Enter phone number
-          </InputLabel>
-          <Input
-            value={values.textmask}
-            name="textmask"
-            id="formatted-text-mask-input"
-            inputComponent={PhoneTextMask}
-            onChange={handleChange}
-          />
-          <Button onClick={handleSubmit2}>Get a call</Button>
-        </FormControl>
 
-    <h1>Make a Call</h1>
       <PhoneInput
-        phoneNumber={phoneNumber}
-        setPhoneNumber={setPhoneNumber}
+        phoneNumber={values.textmask}
+        textMask={PhoneTextMask}
+        handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
-      </div>
-
-
-
-
+    </div>
   );
-};
+}
 
 export default App;

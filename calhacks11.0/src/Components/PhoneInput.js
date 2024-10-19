@@ -1,17 +1,25 @@
 import React from "react";
-
-const PhoneInput = ({ phoneNumber, setPhoneNumber, handleSubmit }) => {
+import FormControl from "@mui/material/FormControl";
+import Input from "@mui/material/Input";
+import InputLabel from "@mui/material/InputLabel";
+import Button from "@mui/material/Button";
+const PhoneInput = ({ phoneNumber, textMask, handleChange, handleSubmit }) => {
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
-        placeholder="Enter phone number"
-        required
-      />
-      <button type="submit">Call</button>
-    </form>
+    <div>
+      <FormControl variant="standard" onSubmit={handleSubmit}>
+        <InputLabel htmlFor="formatted-text-mask-input">
+          Enter phone number
+        </InputLabel>
+        <Input
+          value={phoneNumber}
+          name="textmask"
+          id="formatted-text-mask-input"
+          inputComponent={textMask}
+          onChange={handleChange}
+        />
+        <Button onClick={handleSubmit}>Get a call</Button>
+      </FormControl>
+    </div>
   );
 };
 
