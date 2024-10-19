@@ -8,7 +8,6 @@ import { doc, setDoc } from "firebase/firestore"; // Firestore methods
 import { firestore } from "./firebase"; // Correctly import Firestore instance
 import SwitchLabels from "./Components/ModeToggle";
 
-
 // PhoneTextMask Component
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
   const { onChange, ...other } = props;
@@ -31,18 +30,14 @@ PhoneTextMask.propTypes = {
 
 // MainPage Component
 function MainPage() {
-<<<<<<< HEAD
   const { isSignedIn, user } = useUser();
   const [userid, SetUserid] = useState();
-=======
   const [isMotivMode, setMotivMode] = useState(false);
 
   const handleModeChange = (isMotivMode) => {
     setMotivMode(isMotivMode);
     console.log(`MotivMode: ${isMotivMode}`);
   };
-
->>>>>>> dd2a18dcd4a48e9f06199fe4c7865cf4f0418701
   const [values, setValues] = useState({
     phoneformat: "+1 (100) 000-0000",
   });
@@ -85,17 +80,13 @@ function MainPage() {
       .replace(/\s+/g, "")
       .replace(/[()]/g, "");
 
-
-// Call makeOutboundCall with both phone number and language    
+    // Call makeOutboundCall with both phone number and language
     makeOutboundCall(processedPhoneNumber, language, isMotivMode);
   };
 
-
-    
-
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
-    <div className="absolute top-4 right-4">
+      <div className="absolute top-4 right-4">
         <UserButton />
       </div>
       <SwitchLabels onModeChange={handleModeChange} />
