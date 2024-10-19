@@ -40,7 +40,7 @@ export const makeOutboundCall = async (customerNumber, language) => {
       transcriber: {
         provider: "deepgram",
         model: "nova-2",
-        language: "multi", // Pass selected language
+        language: "multi",
       },
       model: {
         provider: "openai",

@@ -7,36 +7,29 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { ClerkProvider } from "@clerk/clerk-react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import MainPage from "./MainPage";
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+const PUBLISHABLE_KEY =
+  "pk_test_b2JsaWdpbmctcmVwdGlsZS0yMy5jbGVyay5hY2NvdW50cy5kZXYk";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyC42gXV6UdPxHmCltWiin21S9OF83Mxrik",
-  authDomain: "calhacks11-1463c.firebaseapp.com",
-  projectId: "calhacks11-1463c",
-  storageBucket: "calhacks11-1463c.appspot.com",
-  messagingSenderId: "422843759845",
-  appId: "1:422843759845:web:05d3c5b26b7f42025da80c",
-  measurementId: "G-7DWC75L87W",
-};
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
+}
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+      <Router>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/main" element={<MainPage />} />
+        </Routes>
+      </Router>
+    </ClerkProvider>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
