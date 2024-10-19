@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   SignedIn,
   SignedOut,
@@ -36,3 +37,5 @@ export default function App() {
     </div>
   );
 }
+=======
+>>>>>>> dd2a18dcd4a48e9f06199fe4c7865cf4f0418701

@@ -3,9 +3,13 @@ import { IMaskInput } from "react-imask";
 import PropTypes from "prop-types";
 import PhoneInput from "./Components/PhoneInput";
 import { makeOutboundCall } from "./Components/outboundcalls";
+<<<<<<< HEAD
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { doc, setDoc } from "firebase/firestore"; // Firestore methods
 import { firestore } from "./firebase"; // Correctly import Firestore instance
+=======
+import SwitchLabels from "./Components/ModeToggle";
+>>>>>>> dd2a18dcd4a48e9f06199fe4c7865cf4f0418701
 
 // PhoneTextMask Component
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
@@ -29,8 +33,18 @@ PhoneTextMask.propTypes = {
 
 // MainPage Component
 function MainPage() {
+<<<<<<< HEAD
   const { isSignedIn, user } = useUser();
   const [userid, SetUserid] = useState();
+=======
+  const [isMotivMode, setMotivMode] = useState(false);
+
+  const handleModeChange = (isMotivMode) => {
+    setMotivMode(isMotivMode);
+    console.log(`MotivMode: ${isMotivMode}`);
+  };
+
+>>>>>>> dd2a18dcd4a48e9f06199fe4c7865cf4f0418701
   const [values, setValues] = useState({
     phoneformat: "+1 (100) 000-0000",
   });
@@ -73,6 +87,7 @@ function MainPage() {
       .replace(/\s+/g, "")
       .replace(/[()]/g, "");
 
+<<<<<<< HEAD
     // Call makeOutboundCall with phone number and language
     makeOutboundCall(processedPhoneNumber, language);
   };
@@ -84,6 +99,21 @@ function MainPage() {
         <UserButton />
       </div>
 
+=======
+    // Call makeOutboundCall with both phone number and language
+    makeOutboundCall(processedPhoneNumber, language, isMotivMode);
+  };
+
+  return (
+    <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
+      <SwitchLabels onModeChange={handleModeChange} />
+      <div>
+        <h1>
+          {" "}
+          {isMotivMode ? "Motivation mode is active" : "Basic mode is active"}
+        </h1>
+      </div>
+>>>>>>> dd2a18dcd4a48e9f06199fe4c7865cf4f0418701
       <h1 className="text-3xl text-center text-purple-600 font-bold">
         Make a Call
       </h1>
