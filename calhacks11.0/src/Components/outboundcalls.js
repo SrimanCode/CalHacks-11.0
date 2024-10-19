@@ -1,6 +1,29 @@
-export const makeOutboundCall = async (customerNumber) => {
+export const makeOutboundCall = async (customerNumber, language) => {
   const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
   const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
+
+  let firstMessage;
+  let systemMessageContent;
+
+  // Set the first message and system content based on the language selected
+  switch (language) {
+    case "es":
+      firstMessage = "Hola, soy tu maestro de español";
+      systemMessageContent = "You are a friend/mentor helping me learn Spanish using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
+      break;
+    case "zh":
+      firstMessage = "你好，我是你的普通话老师";
+      systemMessageContent = "You are a friend/mentor helping me learn Mandarin using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
+      break;
+    case "pt":
+      firstMessage = "Olá, sou seu professor de português";
+      systemMessageContent = "You are a friend/mentor helping me learn Portuguese using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
+      break;
+    default:
+      firstMessage = "Hello, I am your teacher";
+      systemMessageContent = "You are a friend/mentor helping me learn languages using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
+      break;
+  }
 
   const headers = {
     Authorization: `Bearer ${authToken}`,
@@ -9,11 +32,11 @@ export const makeOutboundCall = async (customerNumber) => {
 
   const data = {
     assistant: {
-      firstMessage: "Hello, this is your Spanish language mentor.",
+      firstMessage: firstMessage,  // Use language-specific first message
       transcriber: {
         provider: "deepgram",
         model: "nova-2",
-        language: "en", // Set to Spanish
+        language: language,  // Pass selected language
       },
       model: {
         provider: "openai",
@@ -21,12 +44,11 @@ export const makeOutboundCall = async (customerNumber) => {
         messages: [
           {
             role: "system",
-            content:
-              "You are a friend/mentor helping me learn Spanish using very aggressive tough love tactics. Ask me questions, interrupt me if I mess up, and insult me when I fail to provide a correct response to your questions. Question types include spanish verb conjugations, real-world scenario responses, and Spanish culture. Include information on how to improve, but sandwich it in between creative insults. You can use funny insults that are similar to Monty Python, and border along the line of profanity but do not use profanity whatsoever.",
+            content: systemMessageContent,  // Use language-specific system content
           },
         ],
       },
-      voice: "juan-rime-ai",
+      voice: "alloy-openai",  // You can also adjust the voice based on language if needed
     },
     phoneNumberId: phoneNumberId,
     customer: {

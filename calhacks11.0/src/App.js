@@ -7,6 +7,7 @@ import { makeOutboundCall } from "./Components/outboundcalls";
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
   const { onChange, ...other } = props;
   return (
+    
     <IMaskInput
       {...other}
       mask="+1 (#00) 000-0000"
@@ -26,6 +27,7 @@ function App() {
   const [values, setValues] = useState({
     phoneformat: "+1 (100) 000-0000",
   });
+  const [language, setLanguage] = useState("es"); // Default to Spanish
 
   const handleChange = (event) => {
     setValues({
@@ -37,12 +39,14 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(
-      values.textmask.replace("-", "").replace(/\s+/g, "").replace(/[()]/g, "")
-    );
-    makeOutboundCall(
-      values.textmask.replace("-", "").replace(/\s+/g, "").replace(/[()]/g, "")
-    );
+  // Process the phone number to remove unnecessary characters
+  const processedPhoneNumber = values.textmask
+    .replace("-", "")
+    .replace(/\s+/g, "")
+    .replace(/[()]/g, "");
+
+  // Call makeOutboundCall with both phone number and language
+  makeOutboundCall(processedPhoneNumber, language);
   };
 
   return (
@@ -50,6 +54,14 @@ function App() {
       <h1 className="text-3xl text-center text-purple-600 font-bold">
         Make a call
       </h1>
+      <label>
+        Select Language:
+        <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+          <option value="es">Spanish</option>
+          <option value="zh">Mandarin</option>
+          <option value="pt">Portuguese</option>
+        </select>
+      </label>
 
       <PhoneInput
         phoneNumber={values.textmask}
