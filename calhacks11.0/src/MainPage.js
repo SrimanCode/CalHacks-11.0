@@ -23,7 +23,7 @@ PhoneTextMask.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-function App() {
+function MainPage() {
   const [values, setValues] = useState({
     phoneformat: "+1 (100) 000-0000",
   });
@@ -73,4 +73,4 @@ function App() {
   );
 }
 
-export default App;
+export default MainPage;
