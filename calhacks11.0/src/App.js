@@ -51,7 +51,7 @@ function App() {
       <div className="w-max">
         <FormControl variant="standard" onSubmit={handleChange}>
           <InputLabel htmlFor="formatted-text-mask-input">
-            enter phone number
+            Enter phone number
           </InputLabel>
           <Input
             value={values.textmask}
