@@ -9,11 +9,11 @@ export const makeOutboundCall = async (customerNumber) => {
 
   const data = {
     assistant: {
-      firstMessage: "Hello this is your English mentor",
+      firstMessage: "Hello, this is your Spanish language mentor.",
       transcriber: {
         provider: "deepgram",
         model: "nova-2",
-        language: "en",  // Set to Spanish
+        language: "en", // Set to Spanish
       },
       model: {
         provider: "openai",
@@ -21,12 +21,12 @@ export const makeOutboundCall = async (customerNumber) => {
         messages: [
           {
             role: "system",
-            content: "You are a friend/mentor helping me learn Spanish using tough love. Ask me questions and insult me after each response. Include information on how to get better, but sandwich it in between insults. You can use creative “Monty Python insults",
+            content:
+              "You are a friend/mentor helping me learn Spanish using very aggressive tough love tactics. Ask me questions, interrupt me if I mess up, and insult me when I fail to provide a correct response to your questions. Question types include spanish verb conjugations, real-world scenario responses, and Spanish culture. Include information on how to improve, but sandwich it in between creative insults. You can use funny insults that are similar to Monty Python, and border along the line of profanity but do not use profanity whatsoever.",
           },
         ],
       },
       voice: "juan-rime-ai",
-      
     },
     phoneNumberId: phoneNumberId,
     customer: {
