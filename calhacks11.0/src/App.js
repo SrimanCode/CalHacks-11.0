@@ -37,7 +37,10 @@ function App() {
       [event.target.name]: event.target.value,
     });
     // testing, please remove
-    console.log(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    console.log(values.textmask);
   };
 
   return (
@@ -45,17 +48,18 @@ function App() {
       <h1 className="text-3xl text-center text-blue-800 font-bold pb-10">
         Treelungo
       </h1>
-      <FormControl variant="standard">
+      <FormControl variant="standard" onSubmit={handleChange}>
         <InputLabel htmlFor="formatted-text-mask-input">
           Enter your phone number:{" "}
         </InputLabel>
         <Input
           value={values.textmask}
-          onChange={handleChange}
           name="textmask"
           id="formatted-text-mask-input"
           inputComponent={PhoneTextMask}
+          onChange={handleChange}
         />
+        <Button onClick={handleSubmit}>Submit</Button>
       </FormControl>
     </div>
   );
