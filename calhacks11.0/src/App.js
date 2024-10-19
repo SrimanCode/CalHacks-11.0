@@ -1,5 +1,4 @@
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import { IMaskInput } from "react-imask";
 import PropTypes from "prop-types";
 import FormControl from "@mui/material/FormControl";
@@ -13,7 +12,7 @@ const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
   return (
     <IMaskInput
       {...other}
-      mask="(#00) 000-0000"
+      mask="+1 (#00) 000-0000"
       definitions={{ "#": /[1-9]/ }}
       inputRef={ref}
       onAccept={(value) => onChange({ target: { name: props.name, value } })}
@@ -28,7 +27,7 @@ PhoneTextMask.propTypes = {
 
 function App() {
   const [values, setValues] = React.useState({
-    phoneformat: "(100) 000-0000",
+    phoneformat: "+1 (100) 000-0000",
   });
 
   const handleChange = (event) => {
@@ -40,7 +39,9 @@ function App() {
   };
 
   const handleSubmit = () => {
-    console.log(values.textmask);
+    console.log(
+      values.textmask.replace("-", "").replace(/\s+/g, "").replace(/[()]/g, "")
+    );
   };
 
   return (
