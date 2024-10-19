@@ -1,11 +1,13 @@
+
 import Button from "@mui/material/Button";
 import { IMaskInput } from "react-imask";
 import PropTypes from "prop-types";
 import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
-
-import * as React from "react";
+import React, { useState } from "react";
+import PhoneInput from "./Components/PhoneInput";
+import { makeOutboundCall } from "./Components/outboundcalls";
 
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
   const { onChange, ...other } = props;
@@ -26,7 +28,7 @@ PhoneTextMask.propTypes = {
 };
 
 function App() {
-  const [values, setValues] = React.useState({
+  const [values, setValues] = useState({
     phoneformat: "+1 (100) 000-0000",
   });
 
@@ -38,11 +40,17 @@ function App() {
     // testing, please remove
   };
 
-  const handleSubmit = () => {
+  const handleSubmit2 = () => {
     console.log(
       values.textmask.replace("-", "").replace(/\s+/g, "").replace(/[()]/g, "")
     );
   };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    makeOutboundCall(phoneNumber);
+  };
+
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
@@ -61,11 +69,21 @@ function App() {
             inputComponent={PhoneTextMask}
             onChange={handleChange}
           />
-          <Button onClick={handleSubmit}>Get a call</Button>
+          <Button onClick={handleSubmit2}>Get a call</Button>
         </FormControl>
+
+    <h1>Make a Call</h1>
+      <PhoneInput
+        phoneNumber={phoneNumber}
+        setPhoneNumber={setPhoneNumber}
+        handleSubmit={handleSubmit}
+      />
       </div>
-    </div>
+
+
+
+
   );
-}
+};
 
 export default App;
