@@ -45,22 +45,24 @@ function App() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
-      <h1 className="text-3xl text-center text-blue-800 font-bold pb-10">
+      <h1 className="text-3xl text-center text-purple-600 font-bold pb-10">
         Treelungo
       </h1>
-      <FormControl variant="standard" onSubmit={handleChange}>
-        <InputLabel htmlFor="formatted-text-mask-input">
-          Enter your phone number:{" "}
-        </InputLabel>
-        <Input
-          value={values.textmask}
-          name="textmask"
-          id="formatted-text-mask-input"
-          inputComponent={PhoneTextMask}
-          onChange={handleChange}
-        />
-        <Button onClick={handleSubmit}>Submit</Button>
-      </FormControl>
+      <div className="w-max">
+        <FormControl variant="standard" onSubmit={handleChange}>
+          <InputLabel htmlFor="formatted-text-mask-input">
+            enter phone number
+          </InputLabel>
+          <Input
+            value={values.textmask}
+            name="textmask"
+            id="formatted-text-mask-input"
+            inputComponent={PhoneTextMask}
+            onChange={handleChange}
+          />
+          <Button onClick={handleSubmit}>Get a call</Button>
+        </FormControl>
+      </div>
     </div>
   );
 }
