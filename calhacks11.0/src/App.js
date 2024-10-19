@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import PhoneInput from "./Components/PhoneInput";
 import React, { useState } from "react";
 import { makeOutboundCall } from "./Components/outboundcalls";
+import { getDatabase, ref, onValue } from "firebase/database";
+import cong from "./configuration";
 
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
   const { onChange, ...other } = props;
   return (
-    
     <IMaskInput
       {...other}
       mask="+1 (#00) 000-0000"
@@ -28,7 +29,10 @@ function App() {
     phoneformat: "+1 (100) 000-0000",
   });
   const [language, setLanguage] = useState("es"); // Default to Spanish
-
+  const [data, setData] = useState([]);
+  React.useEffect(() => {
+    const database = getDatabase(cong);
+  });
   const handleChange = (event) => {
     setValues({
       ...values,
@@ -39,14 +43,14 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  // Process the phone number to remove unnecessary characters
-  const processedPhoneNumber = values.textmask
-    .replace("-", "")
-    .replace(/\s+/g, "")
-    .replace(/[()]/g, "");
+    // Process the phone number to remove unnecessary characters
+    const processedPhoneNumber = values.textmask
+      .replace("-", "")
+      .replace(/\s+/g, "")
+      .replace(/[()]/g, "");
 
-  // Call makeOutboundCall with both phone number and language
-  makeOutboundCall(processedPhoneNumber, language);
+    // Call makeOutboundCall with both phone number and language
+    makeOutboundCall(processedPhoneNumber, language);
   };
 
   return (
