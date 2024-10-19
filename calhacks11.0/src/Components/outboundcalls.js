@@ -1,29 +1,54 @@
-export const makeOutboundCall = async (customerNumber, language) => {
+export const makeOutboundCall = async (customerNumber, language, isMotivMode) => {
   const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
   const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
 
   let firstMessage;
+  let languageName;
   let systemMessageContent;
-
+  
   // Set the first message and system content based on the language selected
   switch (language) {
     case "es":
+      languageName = "Spanish";
       firstMessage = "Hola, soy tu maestro de español";
-      systemMessageContent = "You are a friend/mentor helping me learn Spanish using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
       break;
     case "zh":
+      languageName = "Mandarin";
       firstMessage = "你好，我是你的普通话老师";
-      systemMessageContent = "You are a friend/mentor helping me learn Mandarin using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
       break;
     case "pt":
+      languageName = "Portugese";
       firstMessage = "Olá, sou seu professor de português";
-      systemMessageContent = "You are a friend/mentor helping me learn Portuguese using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
       break;
     default:
+      languageName = "their choosen language";
       firstMessage = "Hello, I am your teacher";
       systemMessageContent = "You are a friend/mentor helping me learn languages using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
       break;
   }
+
+  if(isMotivMode){
+    systemMessageContent = 
+    `You are a friend/mentor helping users learn ${languageName} using tough love. 
+    Provide a sentence in English and ask the user to translate it into ${languageName}. 
+    If their answer is correct or has a similar meaning, tell them it is correct. 
+    If they answer incorrectly, include information on how to get better 
+    but sandwich it between insults. Then, ask another question. 
+    You can use creative “Monty Python insults”. Speak with a slow pace. 
+    End the call after 3 questions.`;
+  }
+  else{
+    systemMessageContent = 
+    `You are a friend/mentor helping users learn ${languageName}. 
+    Provide a sentence in English and ask the user to translate it into ${languageName}. 
+    If their answer is correct or has a similar meaning, tell them it is correct. 
+    If they answer incorrectly, include information on how to get better. 
+    Then, ask another question. Be motivational. Speak with a slow pace. 
+    End the call after 3 questions.`;
+  }
+  
+
+  console.log(`Mode changed to: ${isMotivMode ? 'ExtraMotiv' : 'Basic'}`)
 
   const headers = {
     Authorization: `Bearer ${authToken}`,
