@@ -3,13 +3,11 @@ import { IMaskInput } from "react-imask";
 import PropTypes from "prop-types";
 import PhoneInput from "./Components/PhoneInput";
 import { makeOutboundCall } from "./Components/outboundcalls";
-<<<<<<< HEAD
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { doc, setDoc } from "firebase/firestore"; // Firestore methods
 import { firestore } from "./firebase"; // Correctly import Firestore instance
-=======
 import SwitchLabels from "./Components/ModeToggle";
->>>>>>> dd2a18dcd4a48e9f06199fe4c7865cf4f0418701
+
 
 // PhoneTextMask Component
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
@@ -87,25 +85,19 @@ function MainPage() {
       .replace(/\s+/g, "")
       .replace(/[()]/g, "");
 
-<<<<<<< HEAD
-    // Call makeOutboundCall with phone number and language
-    makeOutboundCall(processedPhoneNumber, language);
-  };
 
-  return (
-    <div className="relative flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
-      {/* Sign Out/User Button in the top-right corner */}
-      <div className="absolute top-4 right-4">
-        <UserButton />
-      </div>
-
-=======
-    // Call makeOutboundCall with both phone number and language
+// Call makeOutboundCall with both phone number and language    
     makeOutboundCall(processedPhoneNumber, language, isMotivMode);
   };
 
+
+    
+
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
+    <div className="absolute top-4 right-4">
+        <UserButton />
+      </div>
       <SwitchLabels onModeChange={handleModeChange} />
       <div>
         <h1>
@@ -113,7 +105,7 @@ function MainPage() {
           {isMotivMode ? "Motivation mode is active" : "Basic mode is active"}
         </h1>
       </div>
->>>>>>> dd2a18dcd4a48e9f06199fe4c7865cf4f0418701
+
       <h1 className="text-3xl text-center text-purple-600 font-bold">
         Make a Call
       </h1>
