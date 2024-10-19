@@ -1,7 +1,7 @@
 export const makeOutboundCall = async (customerNumber, language) => {
   const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
   const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
-
+  let result;
   let firstMessage;
   let systemMessageContent;
 
@@ -68,27 +68,88 @@ export const makeOutboundCall = async (customerNumber, language) => {
     });
 
     if (response.ok) {
-      const result = await response.json();
+      result = await response.json();
       console.log("Call created successfully", result);
+
+      await pollCallStatus(result.id);
+
+      // get a transcript
+      try {
+        const transcript = await fetch(
+          `https://api.vapi.ai/call/${result.id}`,
+          {
+            method: "GET",
+            headers: headers,
+          }
+        );
+
+        if (transcript.ok) {
+          const result = await transcript.json();
+          console.log("Transcript generated successfully", result.transcript);
+          console.log("Summary generated successfully", result.summary);
+        } else {
+          console.log("Failed to create transcript", await transcript.text());
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
     } else {
       console.log("Failed to create call", await response.text());
     }
   } catch (error) {
     console.error("Error:", error);
   }
-  try {
-    const options = {
+
+  /* try {
+    const transcript = await fetch(`https://api.vapi.ai/call/${result.id}`, {
       method: "GET",
       headers: headers,
-      body: JSON.stringify(data),
-    };
+    });
 
-    fetch("https://api.vapi.ai/call?", options)
-      .then((response) => response.json())
-
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
+    if (transcript.ok) {
+      const result = await transcript.json();
+      console.log("Transcript generated successfully", result);
+    } else {
+      console.log("Failed to create transcript", await transcript.text());
+    }
   } catch (error) {
     console.error("Error:", error);
-  }
+  } */
 };
+
+async function pollCallStatus(callID) {
+  let isCallFinished = false;
+  const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
+  const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
+
+  const headers = {
+    Authorization: `Bearer ${authToken}`,
+    "Content-Type": "application/json",
+  };
+
+  while (!isCallFinished) {
+    try {
+      const status = await fetch(`https://api.vapi.ai/call/${callID}`, {
+        method: "GET",
+        headers: headers,
+      });
+
+      if (status.ok) {
+        const statusData = await status.json();
+        console.log("status:", statusData.status);
+
+        if (statusData.status === "ended") {
+          console.log("call finished!");
+          isCallFinished = true;
+        } else {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      } else {
+        console.log("Failed to check status", await status.text());
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      break;
+    }
+  }
+}
