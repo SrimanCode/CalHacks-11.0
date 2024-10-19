@@ -1,6 +1,6 @@
 export const makeOutboundCall = async (customerNumber) => {
-  const authToken = "YOUR_AUTH_TOKEN";
-  const phoneNumberId = "PHONE_NUMBER_ID_FROM_DASHBOARD";
+  const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
+  const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
 
   const headers = {
     Authorization: `Bearer ${authToken}`,
@@ -9,18 +9,24 @@ export const makeOutboundCall = async (customerNumber) => {
 
   const data = {
     assistant: {
-      firstMessage: "Hey, what's up?",
+      firstMessage: "Hello this is your English mentor",
+      transcriber: {
+        provider: "deepgram",
+        model: "nova-2",
+        language: "en",  // Set to Spanish
+      },
       model: {
         provider: "openai",
         model: "gpt-3.5-turbo",
         messages: [
           {
             role: "system",
-            content: "You are an assistant.",
+            content: "You are a friend/mentor helping me learn Spanish using tough love. Ask me questions and insult me after each response. Include information on how to get better, but sandwich it in between insults. You can use creative “Monty Python insults",
           },
         ],
       },
-      voice: "jennifer-playht",
+      voice: "juan-rime-ai",
+      
     },
     phoneNumberId: phoneNumberId,
     customer: {
