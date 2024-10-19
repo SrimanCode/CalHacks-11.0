@@ -23,7 +23,8 @@ export const makeOutboundCall = async (customerNumber, language, isMotivMode) =>
     default:
       languageName = "their choosen language";
       firstMessage = "Hello, I am your teacher";
-      systemMessageContent = "You are a friend/mentor helping me learn languages using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
+      systemMessageContent =
+        "You are a friend/mentor helping me learn languages using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
       break;
   }
 
@@ -57,11 +58,11 @@ export const makeOutboundCall = async (customerNumber, language, isMotivMode) =>
 
   const data = {
     assistant: {
-      firstMessage: firstMessage,  // Use language-specific first message
+      firstMessage: firstMessage, // Use language-specific first message
       transcriber: {
         provider: "deepgram",
         model: "nova-2",
-        language: "multi",  // Pass selected language
+        language: "multi", // Pass selected language
       },
       model: {
         provider: "openai",
@@ -69,11 +70,11 @@ export const makeOutboundCall = async (customerNumber, language, isMotivMode) =>
         messages: [
           {
             role: "system",
-            content: systemMessageContent,  // Use language-specific system content
+            content: systemMessageContent, // Use language-specific system content
           },
         ],
       },
-      voice: "alloy-openai",  // You can also adjust the voice based on language if needed
+      voice: "alloy-openai", // You can also adjust the voice based on language if needed
     },
     phoneNumberId: phoneNumberId,
     customer: {
@@ -94,6 +95,21 @@ export const makeOutboundCall = async (customerNumber, language, isMotivMode) =>
     } else {
       console.log("Failed to create call", await response.text());
     }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+  try {
+    const options = {
+      method: "GET",
+      headers: headers,
+      body: JSON.stringify(data),
+    };
+
+    fetch("https://api.vapi.ai/call?", options)
+      .then((response) => response.json())
+
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
   } catch (error) {
     console.error("Error:", error);
   }
