@@ -114,12 +114,7 @@ function MainPage() {
         </select>
       </label>
 
-      <PhoneInput
-        phoneNumber={values.textmask}
-        textMask={PhoneTextMask}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />
+      <PhoneInput phoneNumber={userid} />
     </div>
   );
 }
