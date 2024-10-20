@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import PhoneInput from "./Components/PhoneInput";
 import { makeOutboundCall } from "./Components/outboundcalls";
 import { UserButton, useUser } from "@clerk/clerk-react";
-import { doc, setDoc } from "firebase/firestore"; // Firestore methods
-import { firestore } from "./firebase"; // Correctly import Firestore instance
 import SwitchLabels from "./Components/ModeToggle";
 import Navbar from "./Components/NavBar";
 import { useNavigate } from "react-router-dom";
@@ -54,7 +52,6 @@ function MainPage() {
       setUserid(phoneNumber);
     }
   });
-
   const handleChange = (event) => {
     setValues({
       ...values,

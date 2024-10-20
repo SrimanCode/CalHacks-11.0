@@ -7,19 +7,51 @@ import {
   collection,
 } from "firebase/firestore";
 import { firestore } from "../firebase";
-export const makeOutboundCall = async (
-  customerNumber,
-  language,
-  isMotivMode,
-  userid
-) => {
+import React, { useEffect, useState } from "react";
+import { useUser } from "@clerk/clerk-react";
+
+async function fetchUserData(userid) {
+  const userDocRef = doc(firestore, `users/${userid}`);
+  const docSnapshot = await getDoc(userDocRef);
+
+  if (docSnapshot.exists()) {
+    const userData = docSnapshot.data();
+    return userData; // Return the entire user document (includes transcripts, summaries, etc.)
+  } else {
+    console.log("No data found for this user.");
+    return null;
+  }
+}
+
+async function sendUserDataToLLM(userid) {
+  const userData = await fetchUserData(userid);
+
+  if (!userData) {
+    console.error("No data available to send to LLM");
+    return;
+  }
+
+  const knowledgeBase = {
+    transcripts: userData.transcripts,
+    summaries: userData.summaries,
+  };
+
+  return knowledgeBase;
+}
+
+async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
   const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
   let result;
   let firstMessage;
   let languageName;
   let systemMessageContent;
-
+  const user_data = await fetchUserData(userid);
+  var res = "";
+  for (let i = 0; i < user_data.transcripts.length; i++) {
+    res += "This is Session " + (i + 1) + ": transcript of the User Learning: ";
+    res += user_data.transcripts[i].transcript;
+  }
   // Set the first message and system content based on the language selected
   switch (language) {
     case "es":
@@ -49,14 +81,14 @@ export const makeOutboundCall = async (
     If they answer incorrectly, include information on how to get better 
     but sandwich it between insults. Then, ask another question. 
     You can use creative “Monty Python insults”. Speak with a slow pace. 
-    End the call after 3 questions.`;
+    End the call after 3 questions. These are previous call transcript: ${res}`;
   } else {
     systemMessageContent = `You are a friend/mentor helping users learn ${languageName}. 
     Provide a sentence in English and ask the user to translate it into ${languageName}. 
     If their answer is correct or has a similar meaning, tell them it is correct. 
     If they answer incorrectly, include information on how to get better. 
     Then, ask another question. Be motivational. Speak with a slow pace. 
-    End the call after 3 questions.`;
+    End the call after 3 questions. This is the previous transcript of the User Learning: ${res}`;
   }
 
   const headers = {
@@ -66,7 +98,7 @@ export const makeOutboundCall = async (
 
   const data = {
     assistant: {
-      firstMessage: firstMessage, // Use language-specific first message
+      firstMessage: firstMessage,
       transcriber: {
         provider: "deepgram",
         model: "nova-2",
@@ -78,10 +110,11 @@ export const makeOutboundCall = async (
         messages: [
           {
             role: "system",
-            content: systemMessageContent, // Use language-specific system content
+            content: systemMessageContent,
           },
         ],
       },
+
       voice: "alloy-openai",
     },
     phoneNumberId: phoneNumberId,
@@ -117,17 +150,14 @@ export const makeOutboundCall = async (
           const callData = await transcriptResponse.json();
           const { transcript, summary } = callData;
 
-          console.log("Transcript generated successfully", transcript);
-          console.log("Summary generated successfully", summary);
+          //console.log("Transcript generated successfully", transcript);
+          //console.log("Summary generated successfully", summary);
 
           // Store transcript and summary in Firestore under the user's ID
           //const userDocRef = doc(firestore, "users", userid); // Firestore reference
 
           const userDocRef = doc(firestore, `users/${userid}`);
-
-          console.log("userDocRef", userDocRef);
           const docSnapshot = await getDoc(userDocRef);
-          console.log("docSnapshot", docSnapshot);
           if (docSnapshot.exists()) {
             await updateDoc(userDocRef, {
               transcripts: arrayUnion({
@@ -168,7 +198,7 @@ export const makeOutboundCall = async (
   } catch (error) {
     console.error("Error:", error);
   }
-};
+}
 
 async function pollCallStatus(callID) {
   let isCallFinished = false;
@@ -205,3 +235,5 @@ async function pollCallStatus(callID) {
     }
   }
 }
+
+export { makeOutboundCall };
