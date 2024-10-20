@@ -68,6 +68,11 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
       languageName = "Portugese";
       firstMessage = "Olá, sou seu professor de português";
       break;
+    case "choice":
+      languageName = "their chosen language";
+      firstMessage =
+        "Hello, I am your language teacher. What language would you like to practice?";
+      break;
     default:
       languageName = "their chosen language";
       firstMessage = "Hello, I am your teacher";

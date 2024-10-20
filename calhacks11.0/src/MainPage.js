@@ -114,6 +114,7 @@ function MainPage() {
               <option value="es">Spanish</option>
               <option value="zh">Mandarin</option>
               <option value="pt">Portuguese</option>
+              <option value="choice">User Choice</option>
             </select>
           </label>
         </div>
