@@ -80,16 +80,21 @@ function MainPage() {
       } relative`}
     >
       <Navbar />
-      {/* {isMotivMode && <FireComponent />} */}
 
       <div
         className={
           isMotivMode
-            ? "animate-shake bg-slate-200 p-10 rounded-xl drop-shadow"
-            : "bg-slate-200 p-10 rounded-xl drop-shadow"
+            ? "animate-shake bg-slate-200 p-10 rounded-xl drop-shadow flex flex-col max-w-fit justify-center items-center "
+            : "bg-slate-200 p-10 rounded-xl drop-shadow flex flex-col w-auto justify-center items-center"
         }
       >
-        <div className="text-center justify-center">
+        <img
+          src="/project-logo.png"
+          alt="Logo"
+          className="w-[150px] max-w-xs h-auto animate-pulse"
+        />
+
+        <div className="text-center pb-5 justify-center">
           <h1 className={isMotivMode ? "text-purple-800" : "text-green-800"}>
             {" "}
             {isMotivMode
@@ -97,10 +102,6 @@ function MainPage() {
               : "Basic mode is active"}
           </h1>
         </div>
-
-        <h1 className="p-5 text-5xl text-center text-slate-700 font-bold">
-          LinguaLine
-        </h1>
 
         <div className="flex text-center justify-center">
           <label className="justify-center">
@@ -116,7 +117,6 @@ function MainPage() {
             </select>
           </label>
         </div>
-
         <PhoneInput
           phoneNumber=""
           usernumber={userid}
@@ -125,6 +125,7 @@ function MainPage() {
           handleSubmit={handleSubmit}
         />
       </div>
+
       <div
         className={`justify-center pt-2"${
           isMotivMode ? "bg-black" : "bg-slate-100"

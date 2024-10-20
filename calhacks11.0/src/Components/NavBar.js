@@ -4,7 +4,7 @@ import { UserButton } from "@clerk/clerk-react";
 
 function Navbar() {
   return (
-    <nav className="bg-gray-800 p-4 w-full fixed top-0">
+    <nav className="bg-gray-800 p-4 w-full fixed top-0 z-10">
       <div className="flex justify-between items-centergap-4">
         <div className="flex gap-4">
           <Link to="/main" className="text-white hover:underline">

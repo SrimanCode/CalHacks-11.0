@@ -46,8 +46,10 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   let firstMessage;
   let languageName;
   let systemMessageContent;
+
   const user_data = await fetchUserData(userid);
   var res = "";
+
   for (let i = 0; i < user_data.transcripts.length; i++) {
     res += "This is Session " + (i + 1) + ": transcript of the User Learning: ";
     res += user_data.transcripts[i].transcript;
@@ -82,7 +84,7 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
     If they answer incorrectly, include information on how to get better 
     but sandwich it between insults that are not profane. Then, ask another question. 
     You can use creative “Monty Python insults”. Speak with a slow pace. 
-    End the call with a rude variation of the phrase "Good luck, and I will talk to you later" after 3 questions.`;
+    End the call with a rude variation of the phrase "Good luck, and I will talk to you later" after 3 questions. these are past transcripts of the user: ${res}`;
   } else {
     systemMessageContent = `You are a friend/mentor helping users learn ${languageName}. 
     Start with a greeting,
@@ -90,7 +92,7 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
     If their answer is correct or has a similar meaning, tell them it is correct. 
     If they answer incorrectly, include information on how to get better. 
     Then, ask another question. Be motivational. Speak with a slow pace. 
-    End the call with a variation of the phrase "Good luck, and I will talk to you soon" after 3 questions.`;
+    End the call with a variation of the phrase "Good luck, and I will talk to you soon" after 3 questions. these are past transcripts of the user: ${res}`;
   }
   console.log(systemMessageContent);
   const headers = {
