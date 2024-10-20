@@ -7,8 +7,9 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        shake: "shake 0.82s cubic-bezier(.36,.07,.19,.97) both",
-        pulse: "scale 0.5s 6s alternate",
+        shake: "shake 1s cubic-bezier(.36,.07,.19,.97) both",
+        pulseone: "scale 0.5s 6s alternate",
+        fall: "fall 2s forwards",
       },
       keyframes: {
         shake: {
@@ -28,6 +29,10 @@ module.exports = {
         scale: {
           "0%": { transform: "scale(1)" },
           "100%": { transform: "scale(1.02)" }, // Scale up slightly
+        },
+        fall: {
+          "0%": { transform: "translateY(-100px)", opacity: "1" },
+          "100%": { transform: "translateY(100vh)", opacity: "0" },
         },
       },
     },
