@@ -89,7 +89,7 @@ function MainPage() {
         </div>
 
         <h1 className="p-5 text-5xl text-center text-slate-700 font-bold">
-          LingLine
+          LanguaLine
         </h1>
 
         <label className="mb-4">
