@@ -75,13 +75,9 @@ function MainPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const processedPhoneNumber = values.textmask
-      .replace("-", "")
-      .replace(/\s+/g, "")
-      .replace(/[()]/g, "");
 
     // Call makeOutboundCall with both phone number and language
-    makeOutboundCall(processedPhoneNumber, language, isMotivMode, userid);
+    makeOutboundCall(userid, language, isMotivMode, userid);
   };
 
   return (
@@ -115,7 +111,7 @@ function MainPage() {
       </label>
 
       <PhoneInput
-        phoneNumber={values.textmask}
+        phoneNumber={userid}
         usernumber={userid}
         textMask={PhoneTextMask}
         handleChange={handleChange}
