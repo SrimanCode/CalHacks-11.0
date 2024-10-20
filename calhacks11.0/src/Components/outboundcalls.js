@@ -76,7 +76,7 @@ export const makeOutboundCall = async (
       },
       model: {
         provider: "openai",
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
         temperature: 1,
         messages: [
           {
