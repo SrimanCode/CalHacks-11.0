@@ -78,11 +78,13 @@ function MainPage() {
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
       <Navbar />
-      <div className="bg-slate-200 p-10 rounded-xl">
+      <div className="bg-slate-200 p-10 rounded-xl drop-shadow">
         <div className="text-center justify-center">
-          <h1 className=" text-red-700">
+          <h1 className={isMotivMode ? "text-purple-800" : "text-green-800"}>
             {" "}
-            {isMotivMode ? "Motivation mode is active" : "Basic mode is active"}
+            {isMotivMode
+              ? "Extra motivational mode is active"
+              : "Basic mode is active"}
           </h1>
         </div>
 
@@ -104,7 +106,7 @@ function MainPage() {
         </label>
 
         <PhoneInput
-          phoneNumber={userid}
+          phoneNumber=""
           usernumber={userid}
           textMask={PhoneTextMask}
           handleChange={handleChange}
