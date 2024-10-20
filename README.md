@@ -15,14 +15,15 @@ We wanted to create an interface that can help users practice speaking a foreign
 ## How we built it
 We used ```React.js``` for our frontend, and ```Firebase``` for our database. To style our components, we utilized ```TailwindCSS``` and ```React MaterialUI```. 
 
-To create, tune, and prompt engineer our AI Mentor, we used the **VAPI.ai** API. Our **transcriber model** is **Deepgram's nova-2 multi** model and our **model** is **gpt-4o-mini** provided by **Open.AI**.  Our Mentor's voice is **Alloy**, also provided by Open.AI. 
+To create, tune, and prompt engineer our AI Mentor, we used the **VAPI.ai** API. Our **transcriber model** is Deepgram's **nova-2 multi** and our **model** is **gpt-4o-mini** provided by **Open.AI**.  Our Mentor's voice is **Alloy**, also provided by **Open.AI**. 
 
-We also are using **Gemini** to analyze users' call transcripts and generate a report identifying strengths and weaknesses in their speaking skills. 
+We are also using **Gemini** to analyze users' call transcripts and generate a report identifying strengths and weaknesses in their speaking skills. 
 
 ## Challenges we ran into
-Our biggest challenge was understanding the VAPI documentation, as it was our first time working with a voice AI API. We had to make a few changes to our project stack to accommodate for VAPI, including only making client-side API calls, unlike our original plan of using ```Express.js```.  
+Our biggest challenge was understanding the VAPI documentation, as it was our first time working with a voice AI API. We had to make a few changes to our project stack to accommodate for VAPI, as we could only make client-side API calls. unlike our original plan of using ```Express.js```.  
 
-We also faced challenges prompt engineering our Mentor for the Basic and Extra Motivating modes, as well as accounting for external interferences like background noises. 
+Since the majority of our team has limited experience working with LLMs and voice AI Agents, we faced some difficulties prompt engineering our Mentor, requiring us to tweak various model parameters and experiment through VAPI's dashboard.
+
 ## Accomplishments that we're proud of
 The turning point in our development process was when we were able to start conversing with our Mentor. After this was solidified, our project trajectory only went upwards. We're proud of the fact we were able to turn this idea into an operational and functional application. 
 
