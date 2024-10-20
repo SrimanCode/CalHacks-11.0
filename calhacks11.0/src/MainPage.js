@@ -10,7 +10,6 @@ import SwitchLabels from "./Components/ModeToggle";
 import Navbar from "./Components/NavBar";
 import { useNavigate } from "react-router-dom";
 
-
 // PhoneTextMask Component
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
   const { onChange, ...other } = props;
@@ -87,10 +86,8 @@ function MainPage() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
-      <Navbar/>
-      <div className="absolute top-4 right-4">
-        <UserButton />
-      </div>
+      <Navbar />
+
       <SwitchLabels onModeChange={handleModeChange} />
       <div>
         <h1>
