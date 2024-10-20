@@ -51,11 +51,6 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
       firstMessage = "Hello, I am your mandarin mentor";
       break;
     case "pt":
-<<<<<<< HEAD
-      languageName = "Portuguese";
-      firstMessage = "Olá, sou seu professor de português";
-      break;
-=======
       languageName = "Portugese";
       firstMessage = "Hello, I am your portugese mentor";
       break;
@@ -64,7 +59,6 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
       firstMessage =
         "Hello, I am your language mentor. What language would you like to practice?";
       break;
->>>>>>> 35c71b1068de6622cc05f9baa91f0a05a6e688ab
     default:
       languageName = "their chosen language";
       firstMessage = "Hello, I am your teacher";
@@ -74,16 +68,6 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   }
 
   if (isMotivMode) {
-<<<<<<< HEAD
-    systemMessageContent = `You are a friend/mentor helping users learn ${languageName} using tough love. 
-    Start with a greeting that is brash, but not rude. Provide a sentence in English and ask the user to translate it into ${languageName}. 
-    If their answer is correct, acknowledge it, if incorrect, provide corrections with insults. 
-    End the call after 3 questions. These are past transcripts of the user: ${transcriptHistory}`;
-  } else {
-    systemMessageContent = `You are a friend/mentor helping users learn ${languageName}. 
-    Start with a greeting, ask the user to translate English sentences into ${languageName}. 
-    Correct their answers and encourage them with positive feedback. End the call after 3 questions. These are past transcripts of the user: ${transcriptHistory}`;
-=======
     systemMessageContent = `You are a friend/mentor helping users learn ${languageName} using tough love.
     and wait until the user responds with "Hello" to begin questions. Be mean, be harsh, and come up with creative ways to insult the user after their response, using "Monty Python" insults.. Avoid any type of 
     explicit profanity. 
@@ -93,7 +77,7 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
     but sandwich it between insults that are not profane. Then, ask another question. You must ask only three questions to the user. After three questions are asked, 
     you must provide a summary of the user's responses and their grammatical errors. 
     Speak with a slow pace. 
-    End the call with a rude variation of the phrase "Good luck, and I will talk to you later" after three  questions. these are past transcripts of the user's prior conversations: ${res}`;
+    End the call with a rude variation of the phrase "Good luck, and I will talk to you later" after three  questions. these are past transcripts of the user's prior conversations: ${transcriptHistory}`;
   } else {
     systemMessageContent = `You are a friend/mentor helping users learn ${languageName}. You will be having a back-and-forth conversation 
     with the user. This conversation must be a natural conversation in ${languageName}. In this conversation, you must ask the user three 
@@ -101,8 +85,7 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
     not make logical sense, continue with the conversational questions as if the user responded normally. After exactly three question and answer sequences, 
     stop the conversation. Switch to speaking in English. Evaluate the user's responses strictly in English. Tell them if their answer is correct, but if their answer 
     has a similar meaning that is not the direct translation verbatim, still tell them it is correct. If they answer incorrectly, include information on how to improve their response. 
-    Be motivational, cordial, and professional in your tone. Speak with a slow pace. End the call with an explicit goodbye.`;
->>>>>>> 35c71b1068de6622cc05f9baa91f0a05a6e688ab
+    Be motivational, cordial, and professional in your tone. Speak with a slow pace. End the call with an explicit goodbye. these are past transcripts of the user's prior conversations: ${transcriptHistory}`;
   }
 
   console.log(systemMessageContent);
@@ -131,15 +114,11 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
           },
         ],
       },
-<<<<<<< HEAD
-      voice: "alloy-openai",
-=======
       voice: {
         provider: "openai",
         voiceId: "alloy",
         speed: 0.8,
       },
->>>>>>> 35c71b1068de6622cc05f9baa91f0a05a6e688ab
       stopSpeakingPlan: {
         numWords: 4,
         voiceSeconds: 0.2,
