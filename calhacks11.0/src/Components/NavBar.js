@@ -13,6 +13,9 @@ function Navbar() {
           <Link to="/history" className="text-white hover:underline">
             History
           </Link>
+          <Link to="/progress" className="text-white hover:underline">
+            Progress
+          </Link>
         </div>
         <UserButton />
       </div>

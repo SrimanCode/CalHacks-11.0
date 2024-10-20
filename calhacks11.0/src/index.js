@@ -11,7 +11,7 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./MainPage";
 import History from "./History";
-
+import Progress from "./progress";
 
 const PUBLISHABLE_KEY =
   "pk_test_b2JsaWdpbmctcmVwdGlsZS0yMy5jbGVyay5hY2NvdW50cy5kZXYk";
@@ -29,7 +29,7 @@ root.render(
           <Route path="/" element={<App />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/history" element={<History />} />
-          
+          <Route path="/progress" element={<Progress />} />
         </Routes>
       </Router>
     </ClerkProvider>

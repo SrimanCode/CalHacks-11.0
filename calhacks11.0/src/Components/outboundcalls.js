@@ -1,59 +1,45 @@
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-  collection,
-} from "firebase/firestore";
+import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase";
-import React, { useEffect, useState } from "react";
-import { useUser } from "@clerk/clerk-react";
+import React from "react";
 
+// Fetch user data from Firestore
 async function fetchUserData(userid) {
   const userDocRef = doc(firestore, `users/${userid}`);
   const docSnapshot = await getDoc(userDocRef);
 
   if (docSnapshot.exists()) {
     const userData = docSnapshot.data();
-    return userData; // Return the entire user document (includes transcripts, summaries, etc.)
+    return userData;
   } else {
-    console.log("No data found for this user.");
+    console.log("User data does not exist");
     return null;
   }
 }
 
-async function sendUserDataToLLM(userid) {
-  const userData = await fetchUserData(userid);
-
-  if (!userData) {
-    console.error("No data available to send to LLM");
-    return;
-  }
-
-  const knowledgeBase = {
-    transcripts: userData.transcripts,
-    summaries: userData.summaries,
-  };
-
-  return knowledgeBase;
-}
-
+// Make an outbound call with previous transcripts integrated
 async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
   const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
-  let result;
   let firstMessage;
   let languageName;
   let systemMessageContent;
 
-  const user_data = await fetchUserData(userid);
-  var res = "";
+  // Fetch user data (transcripts) before making the call
+  const userData = await fetchUserData(userid);
+  let transcriptHistory = "";
 
-  for (let i = 0; i < user_data.transcripts.length; i++) {
-    res += "This is Session " + (i + 1) + ": transcript of the User Learning: ";
-    res += user_data.transcripts[i].transcript;
+  if (userData && userData.transcripts) {
+    // If transcripts exist, concatenate them into the transcriptHistory string
+    for (let i = 0; i < userData.transcripts.length; i++) {
+      transcriptHistory += `This is Session ${
+        i + 1
+      }: transcript of the User Learning: `;
+      transcriptHistory += userData.transcripts[i].transcript + "\n";
+    }
+  } else {
+    transcriptHistory = "No previous transcript data available.";
   }
+
   // Set the first message and system content based on the language selected
   switch (language) {
     case "es":
@@ -65,13 +51,8 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
       firstMessage = "你好，我是你的普通话老师";
       break;
     case "pt":
-      languageName = "Portugese";
+      languageName = "Portuguese";
       firstMessage = "Olá, sou seu professor de português";
-      break;
-    case "choice":
-      languageName = "their chosen language";
-      firstMessage =
-        "Hello, I am your language teacher. What language would you like to practice?";
       break;
     default:
       languageName = "their chosen language";
@@ -82,24 +63,18 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   }
 
   if (isMotivMode) {
-    systemMessageContent = `You are a friend/mentor helping users learn ${languageName} using tough love. Start with a greeting that is brash, but not rude. 
-    and wait until the user responds with "Hello" to begin questions. Be mean, be harsh, come up with creative ways to insult the user at any point.
-    Provide a sentence in English and ask the user to translate it into ${languageName}. 
-    If their answer is correct or has a similar meaning, tell them it is correct. 
-    If they answer incorrectly, include information on how to get better 
-    but sandwich it between insults that are not profane. Then, ask another question. 
-    You can use creative “Monty Python insults”. Speak with a slow pace. 
-    End the call with a rude variation of the phrase "Good luck, and I will talk to you later" after 3 questions. these are past transcripts of the user: ${res}`;
+    systemMessageContent = `You are a friend/mentor helping users learn ${languageName} using tough love. 
+    Start with a greeting that is brash, but not rude. Provide a sentence in English and ask the user to translate it into ${languageName}. 
+    If their answer is correct, acknowledge it, if incorrect, provide corrections with insults. 
+    End the call after 3 questions. These are past transcripts of the user: ${transcriptHistory}`;
   } else {
     systemMessageContent = `You are a friend/mentor helping users learn ${languageName}. 
-    Start with a greeting,
-    and wait until the user responds with "Hello" to begin questions. Provide a sentence in English and ask the user to translate it into ${languageName}. 
-    If their answer is correct or has a similar meaning, tell them it is correct. 
-    If they answer incorrectly, include information on how to get better. 
-    Then, ask another question. Be motivational. Speak with a slow pace. 
-    End the call with a variation of the phrase "Good luck, and I will talk to you soon" after 3 questions. these are past transcripts of the user: ${res}`;
+    Start with a greeting, ask the user to translate English sentences into ${languageName}. 
+    Correct their answers and encourage them with positive feedback. End the call after 3 questions. These are past transcripts of the user: ${transcriptHistory}`;
   }
+
   console.log(systemMessageContent);
+
   const headers = {
     Authorization: `Bearer ${authToken}`,
     "Content-Type": "application/json",
@@ -124,7 +99,6 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
           },
         ],
       },
-
       voice: "alloy-openai",
       stopSpeakingPlan: {
         numWords: 4,
@@ -146,66 +120,56 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
     });
 
     if (response.ok) {
-      result = await response.json();
+      const result = await response.json();
       console.log("Call created successfully", result);
 
       await pollCallStatus(result.id);
 
-      // get a transcript and summary after the call ends
-      try {
-        const transcriptResponse = await fetch(
-          `https://api.vapi.ai/call/${result.id}`,
-          {
-            method: "GET",
-            headers: headers,
-          }
-        );
-
-        if (transcriptResponse.ok) {
-          const callData = await transcriptResponse.json();
-          const { transcript, summary } = callData;
-
-          //console.log("Transcript generated successfully", transcript);
-          //console.log("Summary generated successfully", summary);
-
-          // Store transcript and summary in Firestore under the user's ID
-          //const userDocRef = doc(firestore, "users", userid); // Firestore reference
-
-          const userDocRef = doc(firestore, `users/${userid}`);
-          const docSnapshot = await getDoc(userDocRef);
-          if (docSnapshot.exists()) {
-            await updateDoc(userDocRef, {
-              transcripts: arrayUnion({
-                transcript: transcript,
-                summary: summary,
-                timestamp: new Date().toISOString(),
-              }),
-            });
-          } else {
-            await setDoc(userDocRef, {
-              transcripts: [
-                {
-                  transcript: transcript,
-                  summary: summary,
-                  timestamp: new Date().toISOString(),
-                },
-              ],
-            });
-          }
-          // Append new transcript and summary to the array
-
-          console.log(
-            "Stored transcript and summary in Firestore for user:",
-            userid
-          );
-        } else {
-          console.log(
-            "Failed to create transcript",
-            await transcriptResponse.text()
-          );
+      // Fetch transcript and summary after the call ends
+      const transcriptResponse = await fetch(
+        `https://api.vapi.ai/call/${result.id}`,
+        {
+          method: "GET",
+          headers: headers,
         }
-      } catch (error) {
-        console.error("Error fetching transcript:", error);
+      );
+
+      if (transcriptResponse.ok) {
+        const callData = await transcriptResponse.json();
+        const { transcript, summary } = callData;
+
+        const userDocRef = doc(firestore, `users/${userid}`);
+        const docSnapshot = await getDoc(userDocRef);
+
+        if (docSnapshot.exists()) {
+          await updateDoc(userDocRef, {
+            transcripts: arrayUnion({
+              transcript: transcript || "No transcript available",
+              summary: summary || "No summary available",
+              timestamp: new Date().toISOString(),
+            }),
+          });
+        } else {
+          await setDoc(userDocRef, {
+            transcripts: [
+              {
+                transcript: transcript || "No transcript available",
+                summary: summary || "No summary available",
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          });
+        }
+
+        console.log(
+          "Stored transcript and summary in Firestore for user:",
+          userid
+        );
+      } else {
+        console.log(
+          "Failed to fetch transcript",
+          await transcriptResponse.text()
+        );
       }
     } else {
       console.log("Failed to create call", await response.text());
@@ -215,6 +179,7 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   }
 }
 
+// Poll call status
 async function pollCallStatus(callID) {
   let isCallFinished = false;
   const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
@@ -236,7 +201,7 @@ async function pollCallStatus(callID) {
         console.log("status:", statusData.status);
 
         if (statusData.status === "ended") {
-          console.log("call finished!");
+          console.log("Call finished!");
           isCallFinished = true;
         } else {
           await new Promise((resolve) => setTimeout(resolve, 2000));
