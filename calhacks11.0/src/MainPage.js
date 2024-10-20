@@ -34,13 +34,14 @@ PhoneTextMask.propTypes = {
 function MainPage() {
   const navigate = useNavigate();
   const { isSignedIn, user } = useUser();
-  const [userid, SetUserid] = useState();
+  const [userid, setUserid] = useState("");
   const [isMotivMode, setMotivMode] = useState(false);
 
   const handleModeChange = (isMotivMode) => {
     setMotivMode(isMotivMode);
     console.log(`MotivMode: ${isMotivMode}`);
   };
+
   const [values, setValues] = useState({
     phoneformat: "+1 (100) 000-0000",
   });
@@ -50,24 +51,9 @@ function MainPage() {
     // If the user is signed in and has a phone number, save the entry in Firestore
     if (isSignedIn && user && user.primaryPhoneNumber) {
       const phoneNumber = user.primaryPhoneNumber.phoneNumber; // Clerk's phone number
-      SetUserid(phoneNumber);
-
-      // Create a Firestore document reference with the user's phone number as the document ID
-      const userDocRef = doc(firestore, "users", phoneNumber);
-
-      // Add the user to Firestore with phone number as the document ID
-      setDoc(userDocRef, {
-        phoneNumber: phoneNumber,
-        language: language,
-      })
-        .then(() => {
-          console.log("Firestore entry created for user:", phoneNumber);
-        })
-        .catch((error) => {
-          console.error("Error creating Firestore entry:", error);
-        });
+      setUserid(phoneNumber);
     }
-  }, [isSignedIn, user, language]);
+  });
 
   const handleChange = (event) => {
     setValues({
@@ -79,9 +65,15 @@ function MainPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Call makeOutboundCall with both phone number and language
+    // Ensure we have a valid user ID (phone number)
+    if (!userid) {
+      console.error("No valid user ID (phone number) available");
+      return;
+    }
+
+    // Call makeOutboundCall with both phone number (userid), language, and motivation mode
     makeOutboundCall(userid, language, isMotivMode, userid);
-    navigate("/history");
+    navigate("/history"); // Navigate to history page after submission
   };
 
   return (
@@ -91,7 +83,6 @@ function MainPage() {
       <SwitchLabels onModeChange={handleModeChange} />
       <div>
         <h1>
-          {" "}
           {isMotivMode ? "Motivation mode is active" : "Basic mode is active"}
         </h1>
       </div>
@@ -114,7 +105,7 @@ function MainPage() {
       </label>
 
       <PhoneInput
-        phoneNumber={userid}
+        phoneNumber=""
         usernumber={userid}
         textMask={PhoneTextMask}
         handleChange={handleChange}

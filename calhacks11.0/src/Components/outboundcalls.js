@@ -124,8 +124,10 @@ export const makeOutboundCall = async (
           //const userDocRef = doc(firestore, "users", userid); // Firestore reference
 
           const userDocRef = doc(firestore, `users/${userid}`);
-          const docSnapshot = await getDoc(userDocRef);
 
+          console.log("userDocRef", userDocRef);
+          const docSnapshot = await getDoc(userDocRef);
+          console.log("docSnapshot", docSnapshot);
           if (docSnapshot.exists()) {
             await updateDoc(userDocRef, {
               transcripts: arrayUnion({
