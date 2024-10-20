@@ -7,6 +7,7 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import SwitchLabels from "./Components/ModeToggle";
 import Navbar from "./Components/NavBar";
 import { useNavigate } from "react-router-dom";
+import FireComponent from "./Components/FireComponent";
 
 // PhoneTextMask Component
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
@@ -73,42 +74,62 @@ function MainPage() {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
+    <div
+      className={`flex h-screen flex-col items-center justify-center p-10 ${
+        isMotivMode ? "bg-black" : "bg-slate-100"
+      } relative`}
+    >
       <Navbar />
-      <div className="bg-slate-200 p-10 rounded-xl">
+      {/* {isMotivMode && <FireComponent />} */}
+
+      <div
+        className={
+          isMotivMode
+            ? "animate-shake bg-slate-200 p-10 rounded-xl drop-shadow"
+            : "bg-slate-200 p-10 rounded-xl drop-shadow"
+        }
+      >
         <div className="text-center justify-center">
-          <h1 className=" text-red-700">
+          <h1 className={isMotivMode ? "text-purple-800" : "text-green-800"}>
             {" "}
-            {isMotivMode ? "Motivation mode is active" : "Basic mode is active"}
+            {isMotivMode
+              ? "Extra motivational mode is active"
+              : "Basic mode is active"}
           </h1>
         </div>
 
         <h1 className="p-5 text-5xl text-center text-slate-700 font-bold">
-          LingLine
+          LinguaLine
         </h1>
 
-        <label className="mb-4">
-          Select Language:
-          <select
-            className="ml-2 p-2 border rounded"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-          >
-            <option value="es">Spanish</option>
-            <option value="zh">Mandarin</option>
-            <option value="pt">Portuguese</option>
-          </select>
-        </label>
+        <div className="flex text-center justify-center">
+          <label className="justify-center">
+            Select Language:
+            <select
+              className="ml-2 p-2 border rounded"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="es">Spanish</option>
+              <option value="zh">Mandarin</option>
+              <option value="pt">Portuguese</option>
+            </select>
+          </label>
+        </div>
 
         <PhoneInput
-          phoneNumber={userid}
+          phoneNumber=""
           usernumber={userid}
           textMask={PhoneTextMask}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
         />
       </div>
-      <div className="justify-center pt-2">
+      <div
+        className={`justify-center pt-2"${
+          isMotivMode ? "bg-black" : "bg-slate-100"
+        } relative`}
+      >
         <SwitchLabels onModeChange={handleModeChange} />
       </div>
     </div>

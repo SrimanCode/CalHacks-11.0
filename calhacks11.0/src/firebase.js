@@ -15,3 +15,4 @@ const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 
 export { firestore };
+// Import the functions you need from the SDKs you need

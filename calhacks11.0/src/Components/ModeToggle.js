@@ -11,11 +11,16 @@ export default function SwitchLabels({ onModeChange }) {
   };
 
   return (
-    <FormGroup className="top-2 right-2">
+    <div className={`flex text-center items-center justify-center ${isMotivMode ? 'text-white' : 'text-black'}`}>
+    <FormGroup >
       <FormControlLabel
+       
         control={<Switch checked={isMotivMode} onChange={handleChange} />}
-        label="Extra Motivation Mode"
+        label=""
       />
     </FormGroup>
+    <h1>Extra Motivation Mode</h1>
+    </div>
+    
   );
 }

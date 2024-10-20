@@ -1,6 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* src/styles/tailwind.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.fire {
+  @apply absolute bottom-0 left-0 w-full h-32;
+}
+
+.fire::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--glitter), var(--glitter),
+      linear-gradient(0deg, white 0px, #ff8951 5px, #dcbc169c 30%, transparent 70%),
+      radial-gradient(ellipse at bottom, transparent 30%, black 60%);
+  background-size: 350px 500px, 400px 650px, 100% 100%, 100% 100%;
+  background-blend-mode: hard-light, color-dodge, multiply;
+  background-repeat: repeat, repeat, no-repeat;
+  filter: brightness(3.7) blur(7px) contrast(6);
+  animation: fire 1.75s linear infinite;
+}
+
+@keyframes fire {
+  0% {
+    background-position: center 0px, center 0px, 50% 100%, center center;
+  }
+  100% {
+    background-position: center -500px, center -650px, 50% 100%, center center;
+  }
+}
 
 body {
   margin: 0;
@@ -15,3 +46,4 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+

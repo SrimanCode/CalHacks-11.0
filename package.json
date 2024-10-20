@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
+    "react-datepicker": "^7.5.0"
+  }
+}

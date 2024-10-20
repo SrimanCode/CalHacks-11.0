@@ -75,22 +75,24 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   }
 
   if (isMotivMode) {
-    systemMessageContent = `You are a friend/mentor helping users learn ${languageName} using tough love. 
+    systemMessageContent = `You are a friend/mentor helping users learn ${languageName} using tough love. Start with a greeting that is brash, but not rude. 
+    and wait until the user responds with "Hello" to begin questions. Be mean, be harsh, come up with creative ways to insult the user at any point.
     Provide a sentence in English and ask the user to translate it into ${languageName}. 
     If their answer is correct or has a similar meaning, tell them it is correct. 
     If they answer incorrectly, include information on how to get better 
-    but sandwich it between insults. Then, ask another question. 
+    but sandwich it between insults that are not profane. Then, ask another question. 
     You can use creative “Monty Python insults”. Speak with a slow pace. 
-    End the call after 3 questions. These are previous call transcript: ${res}`;
+    End the call with a rude variation of the phrase "Good luck, and I will talk to you later" after 3 questions.`;
   } else {
     systemMessageContent = `You are a friend/mentor helping users learn ${languageName}. 
-    Provide a sentence in English and ask the user to translate it into ${languageName}. 
+    Start with a greeting,
+    and wait until the user responds with "Hello" to begin questions. Provide a sentence in English and ask the user to translate it into ${languageName}. 
     If their answer is correct or has a similar meaning, tell them it is correct. 
     If they answer incorrectly, include information on how to get better. 
     Then, ask another question. Be motivational. Speak with a slow pace. 
-    End the call after 3 questions. This is the previous transcript of the User Learning: ${res}`;
+    End the call with a variation of the phrase "Good luck, and I will talk to you soon" after 3 questions.`;
   }
-
+  console.log(systemMessageContent);
   const headers = {
     Authorization: `Bearer ${authToken}`,
     "Content-Type": "application/json",
@@ -106,7 +108,8 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
       },
       model: {
         provider: "openai",
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
+        temperature: 1,
         messages: [
           {
             role: "system",
@@ -116,6 +119,11 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
       },
 
       voice: "alloy-openai",
+      stopSpeakingPlan: {
+        numWords: 4,
+        voiceSeconds: 0.2,
+        backoffSeconds: 1,
+      },
     },
     phoneNumberId: phoneNumberId,
     customer: {
