@@ -116,6 +116,16 @@ export const makeOutboundCall = async (
           // Store transcript and summary in Firestore under the user's ID
           const userDocRef = doc(firestore, "users", userid); // Firestore reference
 
+          const docSnapshot = await getDoc(userDocRef);
+
+          if (!docSnapshot.exists()) {
+            await setDoc(userDocRef, { transcripts: [] });
+          }
+
+          if (!docSnapshot.data().transcripts) {
+            await updateDoc(userDocRef, { transcripts: [] });
+          }
+
           // Append new transcript and summary to the array
           await updateDoc(userDocRef, {
             transcripts: arrayUnion({
