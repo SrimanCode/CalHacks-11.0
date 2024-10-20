@@ -10,7 +10,6 @@ import SwitchLabels from "./Components/ModeToggle";
 import Navbar from "./Components/NavBar";
 import { useNavigate } from "react-router-dom";
 
-
 // PhoneTextMask Component
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
   const { onChange, ...other } = props;
@@ -35,13 +34,14 @@ PhoneTextMask.propTypes = {
 function MainPage() {
   const navigate = useNavigate();
   const { isSignedIn, user } = useUser();
-  const [userid, SetUserid] = useState();
+  const [userid, setUserid] = useState("");
   const [isMotivMode, setMotivMode] = useState(false);
 
   const handleModeChange = (isMotivMode) => {
     setMotivMode(isMotivMode);
     console.log(`MotivMode: ${isMotivMode}`);
   };
+
   const [values, setValues] = useState({
     phoneformat: "+1 (100) 000-0000",
   });
@@ -51,24 +51,9 @@ function MainPage() {
     // If the user is signed in and has a phone number, save the entry in Firestore
     if (isSignedIn && user && user.primaryPhoneNumber) {
       const phoneNumber = user.primaryPhoneNumber.phoneNumber; // Clerk's phone number
-      SetUserid(phoneNumber);
-
-      // Create a Firestore document reference with the user's phone number as the document ID
-      const userDocRef = doc(firestore, "users", phoneNumber);
-
-      // Add the user to Firestore with phone number as the document ID
-      setDoc(userDocRef, {
-        phoneNumber: phoneNumber,
-        language: language,
-      })
-        .then(() => {
-          console.log("Firestore entry created for user:", phoneNumber);
-        })
-        .catch((error) => {
-          console.error("Error creating Firestore entry:", error);
-        });
+      setUserid(phoneNumber);
     }
-  }, [isSignedIn, user, language]);
+  });
 
   const handleChange = (event) => {
     setValues({
@@ -80,53 +65,70 @@ function MainPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Call makeOutboundCall with both phone number and language
+    // Ensure we have a valid user ID (phone number)
+    if (!userid) {
+      console.error("No valid user ID (phone number) available");
+      return;
+    }
+
+    // Call makeOutboundCall with both phone number (userid), language, and motivation mode
     makeOutboundCall(userid, language, isMotivMode, userid);
-    navigate("/history");
   };
 
   return (
     <div className={`flex h-screen flex-col items-center justify-center p-10 ${isMotivMode ? 'bg-black' : 'bg-slate-100'} relative`}>
       <Navbar />
       {isMotivMode && <FireComponent />}
-      <div className="bg-slate-200 p-10 rounded-xl">
+     
+      <div
+        className={
+          isMotivMode
+            ? "animate-shake bg-slate-200 p-10 rounded-xl drop-shadow"
+            : "bg-slate-200 p-10 rounded-xl drop-shadow"
+        }
+      >
         <div className="text-center justify-center">
-          <h1 className=" text-red-700">
+          <h1 className={isMotivMode ? "text-purple-800" : "text-green-800"}>
             {" "}
-            {isMotivMode ? "Motivation mode is active" : "Basic mode is active"}
+            {isMotivMode
+              ? "Extra motivational mode is active"
+              : "Basic mode is active"}
+
           </h1>
         </div>
 
         <h1 className="p-5 text-5xl text-center text-slate-700 font-bold">
+
           LinguaLine
         </h1>
-
-        <label className="mb-4">
-          Select Language:
-          <select
-            className="ml-2 p-2 border rounded"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-          >
-            <option value="es">Spanish</option>
-            <option value="zh">Mandarin</option>
-            <option value="pt">Portuguese</option>
-          </select>
-        </label>
+        
+        <div className="flex text-center justify-center">
+          <label className="justify-center">
+            Select Language:
+            <select
+              className="ml-2 p-2 border rounded"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="es">Spanish</option>
+              <option value="zh">Mandarin</option>
+              <option value="pt">Portuguese</option>
+            </select>
+          </label>
+        </div>
 
         <PhoneInput
-          phoneNumber={userid}
+          phoneNumber=""
           usernumber={userid}
           textMask={PhoneTextMask}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
         />
+
       </div>
       <div className={`justify-center pt-2"${isMotivMode ? 'bg-black' : 'bg-slate-100'} relative`}>
         <SwitchLabels onModeChange={handleModeChange} />
       </div>
-      
-
 
     </div>
   );
