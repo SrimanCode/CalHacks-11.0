@@ -1,4 +1,4 @@
-import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase";
 export const makeOutboundCall = async (
   customerNumber,
