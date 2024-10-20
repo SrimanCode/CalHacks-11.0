@@ -12,9 +12,6 @@
 /build
 
 src/firebase.js
-
-calhacks11.0/src/firebase.js
-firebase.js
 # misc
 .DS_Store
 .env
@@ -25,5 +22,3 @@ firebase.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-fire*
