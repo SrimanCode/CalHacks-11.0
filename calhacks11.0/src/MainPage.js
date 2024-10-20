@@ -81,7 +81,7 @@ function MainPage() {
       .replace(/[()]/g, "");
 
     // Call makeOutboundCall with both phone number and language
-    makeOutboundCall(processedPhoneNumber, language, isMotivMode);
+    makeOutboundCall(processedPhoneNumber, language, isMotivMode, userid);
   };
 
   return (
@@ -114,7 +114,7 @@ function MainPage() {
         </select>
       </label>
 
-      <PhoneInput phoneNumber={userid} />
+      <PhoneInput phoneNumber={(userid, SetUserid, handleSubmit)} />
     </div>
   );
 }
