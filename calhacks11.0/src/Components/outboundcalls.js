@@ -1,4 +1,11 @@
-import { doc, setDoc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+  collection,
+} from "firebase/firestore";
 import { firestore } from "../firebase";
 export const makeOutboundCall = async (
   customerNumber,
@@ -114,27 +121,31 @@ export const makeOutboundCall = async (
           console.log("Summary generated successfully", summary);
 
           // Store transcript and summary in Firestore under the user's ID
-          const userDocRef = doc(firestore, "users", userid); // Firestore reference
+          //const userDocRef = doc(firestore, "users", userid); // Firestore reference
 
+          const userDocRef = doc(firestore, `users/${userid}`);
           const docSnapshot = await getDoc(userDocRef);
 
-          if (!docSnapshot.exists()) {
-            await setDoc(userDocRef, { transcripts: [] });
+          if (docSnapshot.exists()) {
+            await updateDoc(userDocRef, {
+              transcripts: arrayUnion({
+                transcript: transcript,
+                summary: summary,
+                timestamp: new Date().toISOString(),
+              }),
+            });
+          } else {
+            await setDoc(userDocRef, {
+              transcripts: [
+                {
+                  transcript: transcript,
+                  summary: summary,
+                  timestamp: new Date().toISOString(),
+                },
+              ],
+            });
           }
-
-          if (!docSnapshot.data().transcripts) {
-            await updateDoc(userDocRef, { transcripts: [] });
-          }
-
           // Append new transcript and summary to the array
-          await updateDoc(userDocRef, {
-            transcripts: arrayUnion({
-              timestamp: new Date().toISOString(),
-              transcript: transcript,
-              summary: summary,
-              language: languageName,
-            }),
-          });
 
           console.log(
             "Stored transcript and summary in Firestore for user:",
