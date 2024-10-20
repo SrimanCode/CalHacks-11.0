@@ -79,23 +79,26 @@ function MainPage() {
         isMotivMode ? "bg-black" : "bg-slate-100"
       } relative`}
     >
+      <FireComponent isMotivMode={isMotivMode} />
       <Navbar />
 
       <div
-        className={
-          isMotivMode
-            ? "animate-shake bg-slate-200 p-10 rounded-xl drop-shadow flex flex-col max-w-fit justify-center items-center "
-            : "bg-slate-200 p-10 rounded-xl drop-shadow flex flex-col w-auto justify-center items-center"
-        }
+        className={`p-10 transition-colors rounded-xl drop-shadow flex flex-col w-auto justify-center items-center ${isMotivMode ? "bg-orange-200" : "bg-slate-200"}`}
       >
         <img
           src="/project-logo.png"
           alt="Logo"
-          className="w-[150px] max-w-xs h-auto animate-pulse"
+          className="w-[150px] max-w-xs h-auto"
         />
 
         <div className="text-center pb-5 justify-center">
-          <h1 className={isMotivMode ? "text-purple-800" : "text-green-800"}>
+          <h1
+            className={
+              isMotivMode
+                ? "text-purple-800 font-bold animate-shake"
+                : "text-green-800"
+            }
+          >
             {" "}
             {isMotivMode
               ? "Extra motivational mode is active"

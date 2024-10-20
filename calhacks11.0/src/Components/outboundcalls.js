@@ -58,20 +58,20 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   switch (language) {
     case "es":
       languageName = "Spanish";
-      firstMessage = "Hola, soy tu maestro de español";
+      firstMessage = "Hello, I am your spanish mentor";
       break;
     case "zh":
       languageName = "Mandarin";
-      firstMessage = "你好，我是你的普通话老师";
+      firstMessage = "Hello, I am your mandarin mentor";
       break;
     case "pt":
       languageName = "Portugese";
-      firstMessage = "Olá, sou seu professor de português";
+      firstMessage = "Hello, I am your portugese mentor";
       break;
     case "choice":
       languageName = "their chosen language";
       firstMessage =
-        "Hello, I am your language teacher. What language would you like to practice?";
+        "Hello, I am your language mentor. What language would you like to practice?";
       break;
     default:
       languageName = "their chosen language";
@@ -82,23 +82,26 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
   }
 
   if (isMotivMode) {
-    systemMessageContent = `You are a friend/mentor helping users learn ${languageName} using tough love. Start with a greeting that is brash, but not rude. 
-    and wait until the user responds with "Hello" to begin questions. Be mean, be harsh, come up with creative ways to insult the user at any point.
+    systemMessageContent = `You are a friend/mentor helping users learn ${languageName} using tough love.
+    and wait until the user responds with "Hello" to begin questions. Be mean, be harsh, and come up with creative ways to insult the user after their response, using "Monty Python" insults.. Avoid any type of 
+    explicit profanity. 
     Provide a sentence in English and ask the user to translate it into ${languageName}. 
-    If their answer is correct or has a similar meaning, tell them it is correct. 
-    If they answer incorrectly, include information on how to get better 
-    but sandwich it between insults that are not profane. Then, ask another question. 
-    You can use creative “Monty Python insults”. Speak with a slow pace. 
-    End the call with a rude variation of the phrase "Good luck, and I will talk to you later" after 3 questions. these are past transcripts of the user: ${res}`;
+    If their answer is correct or has a similar meaning that is not the direct translation verbatim, tell them it is correct. 
+    If they answer incorrectly, include information on how they can improve their answer, 
+    but sandwich it between insults that are not profane. Then, ask another question. You must ask only three questions to the user. After three questions are asked, 
+    you must provide a summary of the user's responses and their grammatical errors. 
+    Speak with a slow pace. 
+    End the call with a rude variation of the phrase "Good luck, and I will talk to you later" after three  questions. these are past transcripts of the user's prior conversations: ${res}`;
   } else {
-    systemMessageContent = `You are a friend/mentor helping users learn ${languageName}. 
-    Start with a greeting,
-    and wait until the user responds with "Hello" to begin questions. Provide a sentence in English and ask the user to translate it into ${languageName}. 
-    If their answer is correct or has a similar meaning, tell them it is correct. 
-    If they answer incorrectly, include information on how to get better. 
-    Then, ask another question. Be motivational. Speak with a slow pace. 
-    End the call with a variation of the phrase "Good luck, and I will talk to you soon" after 3 questions. these are past transcripts of the user: ${res}`;
+    systemMessageContent = `You are a friend/mentor helping users learn ${languageName}. You will be having a back-and-forth conversation 
+    with the user. This conversation must be a natural conversation in ${languageName}. In this conversation, you must ask the user three 
+    questions. These questions should flow in conversation, and the user will respond to each one in succession. If the response does 
+    not make logical sense, continue with the conversational questions as if the user responded normally. After exactly three question and answer sequences, 
+    stop the conversation. Switch to speaking in English. Evaluate the user's responses strictly in English. Tell them if their answer is correct, but if their answer 
+    has a similar meaning that is not the direct translation verbatim, still tell them it is correct. If they answer incorrectly, include information on how to improve their response. 
+    Be motivational, cordial, and professional in your tone. Speak with a slow pace. End the call with an explicit goodbye.`;
   }
+
   console.log(systemMessageContent);
   const headers = {
     Authorization: `Bearer ${authToken}`,
@@ -124,8 +127,11 @@ async function makeOutboundCall(customerNumber, language, isMotivMode, userid) {
           },
         ],
       },
-
-      voice: "alloy-openai",
+      voice: {
+        provider: "openai",
+        voiceId: "alloy",
+        speed: 0.8,
+      },
       stopSpeakingPlan: {
         numWords: 4,
         voiceSeconds: 0.2,
