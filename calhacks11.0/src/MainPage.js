@@ -73,44 +73,47 @@ function MainPage() {
 
     // Call makeOutboundCall with both phone number (userid), language, and motivation mode
     makeOutboundCall(userid, language, isMotivMode, userid);
-    navigate("/history"); // Navigate to history page after submission
   };
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
       <Navbar />
+      <div className="bg-slate-200 p-10 rounded-xl">
+        <div className="text-center justify-center">
+          <h1 className=" text-red-700">
+            {" "}
+            {isMotivMode ? "Motivation mode is active" : "Basic mode is active"}
+          </h1>
+        </div>
 
-      <SwitchLabels onModeChange={handleModeChange} />
-      <div>
-        <h1>
-          {isMotivMode ? "Motivation mode is active" : "Basic mode is active"}
+        <h1 className="p-5 text-5xl text-center text-slate-700 font-bold">
+          LingLine
         </h1>
+
+        <label className="mb-4">
+          Select Language:
+          <select
+            className="ml-2 p-2 border rounded"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <option value="es">Spanish</option>
+            <option value="zh">Mandarin</option>
+            <option value="pt">Portuguese</option>
+          </select>
+        </label>
+
+        <PhoneInput
+          phoneNumber={userid}
+          usernumber={userid}
+          textMask={PhoneTextMask}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
       </div>
-
-      <h1 className="text-3xl text-center text-purple-600 font-bold">
-        Make a Call
-      </h1>
-
-      <label className="mb-4">
-        Select Language:
-        <select
-          className="ml-2 p-2 border rounded"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-        >
-          <option value="es">Spanish</option>
-          <option value="zh">Mandarin</option>
-          <option value="pt">Portuguese</option>
-        </select>
-      </label>
-
-      <PhoneInput
-        phoneNumber=""
-        usernumber={userid}
-        textMask={PhoneTextMask}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-      />
+      <div className="justify-center pt-2">
+        <SwitchLabels onModeChange={handleModeChange} />
+      </div>
     </div>
   );
 }
