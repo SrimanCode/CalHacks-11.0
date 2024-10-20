@@ -29,6 +29,7 @@ root.render(
           <Route path="/" element={<App />} />
           <Route path="/main" element={<MainPage />} />
           <Route path="/history" element={<History />} />
+          
         </Routes>
       </Router>
     </ClerkProvider>
