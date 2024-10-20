@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import PhoneInput from "./Components/PhoneInput";
 import { makeOutboundCall } from "./Components/outboundcalls";
 import { UserButton, useUser } from "@clerk/clerk-react";
-import { doc, setDoc } from "firebase/firestore"; // Firestore methods
-import { firestore } from "./firebase"; // Correctly import Firestore instance
 import SwitchLabels from "./Components/ModeToggle";
 import Navbar from "./Components/NavBar";
 import { useNavigate } from "react-router-dom";
@@ -55,7 +53,6 @@ function MainPage() {
       setUserid(phoneNumber);
     }
   });
-
   const handleChange = (event) => {
     setValues({
       ...values,
@@ -77,10 +74,14 @@ function MainPage() {
   };
 
   return (
-    <div className={`flex h-screen flex-col items-center justify-center p-10 ${isMotivMode ? 'bg-black' : 'bg-slate-100'} relative`}>
+    <div
+      className={`flex h-screen flex-col items-center justify-center p-10 ${
+        isMotivMode ? "bg-black" : "bg-slate-100"
+      } relative`}
+    >
       <Navbar />
-      {isMotivMode && <FireComponent />}
-     
+      {/* {isMotivMode && <FireComponent />} */}
+
       <div
         className={
           isMotivMode
@@ -94,15 +95,13 @@ function MainPage() {
             {isMotivMode
               ? "Extra motivational mode is active"
               : "Basic mode is active"}
-
           </h1>
         </div>
 
         <h1 className="p-5 text-5xl text-center text-slate-700 font-bold">
-
           LinguaLine
         </h1>
-        
+
         <div className="flex text-center justify-center">
           <label className="justify-center">
             Select Language:
@@ -125,12 +124,14 @@ function MainPage() {
           handleChange={handleChange}
           handleSubmit={handleSubmit}
         />
-
       </div>
-      <div className={`justify-center pt-2"${isMotivMode ? 'bg-black' : 'bg-slate-100'} relative`}>
+      <div
+        className={`justify-center pt-2"${
+          isMotivMode ? "bg-black" : "bg-slate-100"
+        } relative`}
+      >
         <SwitchLabels onModeChange={handleModeChange} />
       </div>
-
     </div>
   );
 }
