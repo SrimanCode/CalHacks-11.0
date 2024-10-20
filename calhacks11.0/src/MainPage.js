@@ -7,6 +7,7 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import { doc, setDoc } from "firebase/firestore"; // Firestore methods
 import { firestore } from "./firebase"; // Correctly import Firestore instance
 import SwitchLabels from "./Components/ModeToggle";
+import Navbar from "./Components/NavBar";
 import { useNavigate } from "react-router-dom";
 
 // PhoneTextMask Component
@@ -85,9 +86,8 @@ function MainPage() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
-      <div className="absolute top-4 right-4">
-        <UserButton />
-      </div>
+      <Navbar />
+
       <SwitchLabels onModeChange={handleModeChange} />
       <div>
         <h1>

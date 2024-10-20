@@ -10,7 +10,8 @@ import "@fontsource/roboto/700.css";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./MainPage";
-import History from "./Components/History";
+import History from "./History";
+
 
 const PUBLISHABLE_KEY =
   "pk_test_b2JsaWdpbmctcmVwdGlsZS0yMy5jbGVyay5hY2NvdW50cy5kZXYk";
