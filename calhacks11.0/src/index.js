@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./MainPage";
 import History from "./History";
 
+
 const PUBLISHABLE_KEY =
   "pk_test_b2JsaWdpbmctcmVwdGlsZS0yMy5jbGVyay5hY2NvdW50cy5kZXYk";
 
