@@ -9,6 +9,7 @@ import { firestore } from "./firebase"; // Correctly import Firestore instance
 import SwitchLabels from "./Components/ModeToggle";
 import Navbar from "./Components/NavBar";
 import { useNavigate } from "react-router-dom";
+import FireComponent from "./Components/FireComponent";
 
 // PhoneTextMask Component
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
