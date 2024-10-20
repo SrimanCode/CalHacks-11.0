@@ -76,8 +76,10 @@ function MainPage() {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
+    <div className={`flex h-screen flex-col items-center justify-center p-10 ${isMotivMode ? 'bg-black' : 'bg-slate-100'} relative`}>
       <Navbar />
+      {isMotivMode && <FireComponent />}
+     
       <div
         className={
           isMotivMode
@@ -91,12 +93,15 @@ function MainPage() {
             {isMotivMode
               ? "Extra motivational mode is active"
               : "Basic mode is active"}
+
           </h1>
         </div>
 
         <h1 className="p-5 text-5xl text-center text-slate-700 font-bold">
-          LanguaLine
+
+          LinguaLine
         </h1>
+        
         <div className="flex text-center justify-center">
           <label className="justify-center">
             Select Language:
@@ -119,10 +124,12 @@ function MainPage() {
           handleChange={handleChange}
           handleSubmit={handleSubmit}
         />
+
       </div>
-      <div className="justify-center pt-2">
+      <div className={`justify-center pt-2"${isMotivMode ? 'bg-black' : 'bg-slate-100'} relative`}>
         <SwitchLabels onModeChange={handleModeChange} />
       </div>
+
     </div>
   );
 }
