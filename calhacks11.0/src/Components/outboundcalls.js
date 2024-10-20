@@ -1,13 +1,11 @@
-import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
-import { firestore } from "../firebase";
 export const makeOutboundCall = async (
   customerNumber,
   language,
-  isMotivMode,
-  userid
+  isMotivMode
 ) => {
   const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
   const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
+
   let result;
   let firstMessage;
   let languageName;
@@ -28,7 +26,7 @@ export const makeOutboundCall = async (
       firstMessage = "Olá, sou seu professor de português";
       break;
     default:
-      languageName = "their chosen language";
+      languageName = "their choosen language";
       firstMessage = "Hello, I am your teacher";
       systemMessageContent =
         "You are a friend/mentor helping me learn languages using tough love. Teach me vocab by mentioning words and the meaning of them in English. Include information on how to get better, but sandwich it in between insults. You can use creative 'Monty Python' insults.";
@@ -51,6 +49,8 @@ export const makeOutboundCall = async (
     Then, ask another question. Be motivational. Speak with a slow pace. 
     End the call after 3 questions.`;
   }
+
+  console.log(`Mode changed to: ${isMotivMode ? "ExtraMotiv" : "Basic"}`);
 
   const headers = {
     Authorization: `Bearer ${authToken}`,
@@ -75,7 +75,7 @@ export const makeOutboundCall = async (
           },
         ],
       },
-      voice: "alloy-openai",
+      voice: "alloy-openai", // You can also adjust the voice based on language if needed
     },
     phoneNumberId: phoneNumberId,
     customer: {
@@ -96,9 +96,9 @@ export const makeOutboundCall = async (
 
       await pollCallStatus(result.id);
 
-      // get a transcript and summary after the call ends
+      // get a transcript
       try {
-        const transcriptResponse = await fetch(
+        const transcript = await fetch(
           `https://api.vapi.ai/call/${result.id}`,
           {
             method: "GET",
@@ -106,38 +106,16 @@ export const makeOutboundCall = async (
           }
         );
 
-        if (transcriptResponse.ok) {
-          const callData = await transcriptResponse.json();
-          const { transcript, summary } = callData;
+        if (transcript.ok) {
+          const result = await transcript.json();
 
-          console.log("Transcript generated successfully", transcript);
-          console.log("Summary generated successfully", summary);
-
-          // Store transcript and summary in Firestore under the user's ID
-          const userDocRef = doc(firestore, "users", userid); // Firestore reference
-
-          // Append new transcript and summary to the array
-          await updateDoc(userDocRef, {
-            transcripts: arrayUnion({
-              timestamp: new Date().toISOString(),
-              transcript: transcript,
-              summary: summary,
-              language: languageName,
-            }),
-          });
-
-          console.log(
-            "Stored transcript and summary in Firestore for user:",
-            userid
-          );
+          console.log("Transcript generated successfully", result.transcript);
+          console.log("Summary generated successfully", result.summary);
         } else {
-          console.log(
-            "Failed to create transcript",
-            await transcriptResponse.text()
-          );
+          console.log("Failed to create transcript", await transcript.text());
         }
       } catch (error) {
-        console.error("Error fetching transcript:", error);
+        console.error("Error:", error);
       }
     } else {
       console.log("Failed to create call", await response.text());
@@ -145,11 +123,28 @@ export const makeOutboundCall = async (
   } catch (error) {
     console.error("Error:", error);
   }
+
+  /* try {
+    const transcript = await fetch(`https://api.vapi.ai/call/${result.id}`, {
+      method: "GET",
+      headers: headers,
+    });
+
+    if (transcript.ok) {
+      const result = await transcript.json();
+      console.log("Transcript generated successfully", result);
+    } else {
+      console.log("Failed to create transcript", await transcript.text());
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  } */
 };
 
 async function pollCallStatus(callID) {
   let isCallFinished = false;
   const authToken = process.env.REACT_APP_VAPI_PUBLIC_KEY;
+  const phoneNumberId = process.env.REACT_APP_ASSISTANT_ID;
 
   const headers = {
     Authorization: `Bearer ${authToken}`,
@@ -177,7 +172,7 @@ async function pollCallStatus(callID) {
         console.log("Failed to check status", await status.text());
       }
     } catch (error) {
-      console.error("Error checking call status:", error);
+      console.error("Error:", error);
       break;
     }
   }
