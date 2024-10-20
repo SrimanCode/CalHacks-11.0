@@ -81,7 +81,6 @@ function MainPage() {
 
     // Call makeOutboundCall with both phone number and language
     makeOutboundCall(userid, language, isMotivMode, userid);
-    navigate("/history");
   };
 
   return (
