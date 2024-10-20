@@ -8,6 +8,8 @@ import { doc, setDoc } from "firebase/firestore"; // Firestore methods
 import { firestore } from "./firebase"; // Correctly import Firestore instance
 import SwitchLabels from "./Components/ModeToggle";
 import Navbar from "./Components/NavBar";
+import { useNavigate } from "react-router-dom";
+
 
 // PhoneTextMask Component
 const PhoneTextMask = React.forwardRef(function TextMaskCustom(props, ref) {
@@ -31,6 +33,7 @@ PhoneTextMask.propTypes = {
 
 // MainPage Component
 function MainPage() {
+  const navigate = useNavigate();
   const { isSignedIn, user } = useUser();
   const [userid, SetUserid] = useState();
   const [isMotivMode, setMotivMode] = useState(false);
@@ -76,13 +79,10 @@ function MainPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const processedPhoneNumber = values.textmask
-      .replace("-", "")
-      .replace(/\s+/g, "")
-      .replace(/[()]/g, "");
 
     // Call makeOutboundCall with both phone number and language
-    makeOutboundCall(processedPhoneNumber, language, isMotivMode);
+    makeOutboundCall(userid, language, isMotivMode, userid);
+    navigate("/history");
   };
 
   return (
@@ -116,7 +116,13 @@ function MainPage() {
         </select>
       </label>
 
-      <PhoneInput phoneNumber={userid} />
+      <PhoneInput
+        phoneNumber={userid}
+        usernumber={userid}
+        textMask={PhoneTextMask}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
     </div>
   );
 }
