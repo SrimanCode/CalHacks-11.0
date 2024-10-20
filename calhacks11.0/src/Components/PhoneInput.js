@@ -3,7 +3,13 @@ import FormControl from "@mui/material/FormControl";
 import Input from "@mui/material/Input";
 import InputLabel from "@mui/material/InputLabel";
 import Button from "@mui/material/Button";
-const PhoneInput = ({ phoneNumber, textMask, handleChange, handleSubmit }) => {
+const PhoneInput = ({
+  phoneNumber,
+  textMask,
+  handleChange,
+  handleSubmit,
+  usernumber,
+}) => {
   return (
     <div>
       <FormControl variant="standard" onSubmit={handleSubmit}>
@@ -11,7 +17,7 @@ const PhoneInput = ({ phoneNumber, textMask, handleChange, handleSubmit }) => {
           Enter phone number
         </InputLabel>
         <Input
-          value={phoneNumber}
+          value={phoneNumber || usernumber}
           name="textmask"
           id="formatted-text-mask-input"
           inputComponent={textMask}
