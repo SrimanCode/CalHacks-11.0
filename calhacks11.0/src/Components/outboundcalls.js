@@ -1,6 +1,5 @@
-import { doc, setDoc } from "firebase/firestore"; // Import Firestore methods
+import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { firestore } from "../firebase";
-
 export const makeOutboundCall = async (
   customerNumber,
   language,
@@ -114,19 +113,18 @@ export const makeOutboundCall = async (
           console.log("Transcript generated successfully", transcript);
           console.log("Summary generated successfully", summary);
 
+          // Store transcript and summary in Firestore under the user's ID
           const userDocRef = doc(firestore, "users", userid); // Firestore reference
 
-          await setDoc(
-            userDocRef,
-            {
-              phoneNumber: customerNumber,
-              transcript: transcript, // Store the transcript
-              summary: summary, // Store the summary
+          // Append new transcript and summary to the array
+          await updateDoc(userDocRef, {
+            transcripts: arrayUnion({
+              timestamp: new Date().toISOString(),
+              transcript: transcript,
+              summary: summary,
               language: languageName,
-              callDate: new Date().toISOString(),
-            },
-            { merge: true }
-          ); // Merge with existing data if any
+            }),
+          });
 
           console.log(
             "Stored transcript and summary in Firestore for user:",
