@@ -10,7 +10,6 @@ import "@fontsource/roboto/700.css";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./MainPage";
-
 import History from "./History";
 
 
