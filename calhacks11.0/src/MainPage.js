@@ -78,7 +78,13 @@ function MainPage() {
   return (
     <div className="flex h-screen flex-col items-center justify-center p-10 bg-slate-100">
       <Navbar />
-      <div className="bg-slate-200 p-10 rounded-xl drop-shadow">
+      <div
+        className={
+          isMotivMode
+            ? "animate-shake bg-slate-200 p-10 rounded-xl drop-shadow"
+            : "bg-slate-200 p-10 rounded-xl drop-shadow"
+        }
+      >
         <div className="text-center justify-center">
           <h1 className={isMotivMode ? "text-purple-800" : "text-green-800"}>
             {" "}
