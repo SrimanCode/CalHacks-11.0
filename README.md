@@ -1,4 +1,4 @@
-# Callhacks 11.0 Project 
+# Callhacks 11.0 Project: LanguaLine
 Team: Pari, David, Sriman, Anishka
 ## Inspiration
 With a variety of language learning resources out there, we set out to create a tool that can help us practice a part of language that keeps things flowing -- conversation! LanguaLine aims to empower users to speak their foreign language by helping them develop their conversational skills. 
