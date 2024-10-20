@@ -12,16 +12,13 @@ const PhoneInput = ({
   usernumber,
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col py-2 items-center justify-center">
       <Box
         component="form"
         onSubmit={handleSubmit}
         className="flex flex-col items-center"
       >
         <FormControl variant="standard">
-          <label htmlFor="formatted-text-mask-input" className="text-center">
-            Phone Number
-          </label>
           <Input
             value={phoneNumber || usernumber}
             name="textmask"
@@ -30,7 +27,7 @@ const PhoneInput = ({
           />
         </FormControl>
       </Box>
-      <div className="mt-3">
+      <div className="pt-5">
         <Button variant="contained" type="submit" onClick={handleSubmit}>
           Get a call
         </Button>

@@ -97,19 +97,20 @@ function MainPage() {
         <h1 className="p-5 text-5xl text-center text-slate-700 font-bold">
           LanguaLine
         </h1>
-
-        <label className="mb-4">
-          Select Language:
-          <select
-            className="ml-2 p-2 border rounded"
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-          >
-            <option value="es">Spanish</option>
-            <option value="zh">Mandarin</option>
-            <option value="pt">Portuguese</option>
-          </select>
-        </label>
+        <div className="flex text-center justify-center">
+          <label className="justify-center">
+            Select Language:
+            <select
+              className="ml-2 p-2 border rounded"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+            >
+              <option value="es">Spanish</option>
+              <option value="zh">Mandarin</option>
+              <option value="pt">Portuguese</option>
+            </select>
+          </label>
+        </div>
 
         <PhoneInput
           phoneNumber=""
